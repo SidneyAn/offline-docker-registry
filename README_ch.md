@@ -1,7 +1,15 @@
 # 欢迎使用镜像仓库迁移工具
   本项目提供了可快速迁移的镜像仓库生成/运行工具，主要解决在不联网的机器上拉取（有限集合）docker 镜像问题，比如可以用与 starlingx 项目中第一个controller 的不联网部署。 并实现了即插即用，无需花费 load image 的时间。 
+## 如何生成 local registry 镜像文件
+  在可以连接 docker hub 的机器上下载本项目
+  
+    $git clone https://github.com/SidneyAn/offline-docker-registry.git
+    $cd offline-docker-registry
+    $sudo docker pull registry
+    $sudo docker save -o image_registry registry
+ 
 ## 如何生成一个可迁移的镜像仓库
-  只需在可连接docker hub 的机器上，下载本项目并运行下面的命令。
+  只需在可连接docker hub 的机器上，运行下面的命令。
       
       $cd offline-docker-registry
       $sudo ./registry_generator.sh -i platform_images.lst
@@ -11,7 +19,15 @@
      $sudo ./registry_generator.sh -i platform_images.lst -p 5001 -r registry.dcp-dev.intel.com
   脚本运行结束后，会在当前目录下生成一个名为 images 的目录。
 ## 如何运行可迁移镜像仓库
-  将“offline-docker-registry”文件夹（包括上面脚本生成的 images目录）拷贝到未联网的机器上， 运行下面的命令即可。
+  将“offline-docker-registry”文件夹（包括上面脚本生成的 images目录）拷贝到未联网的机器上，检查下面的文件（夹）是否齐全：
+  
+    $ll PATH_OF_isolated-registry
+    -rw------- 1 sidney sidney 26344448 Nov 27 14:51 image_registry
+    drwxr-xr-x  3 sidney sidney     4096 Nov 16 17:41 images/
+    ...
+    -rwxr-xr-x 1 sidney sidney     3474 Jul 13 10:24 registry_generator.sh
+    
+  运行下面的命令即可。
   
     $cd PATH_OF_isolated-registry
     $sudo sh registry_enabled.sh
